@@ -27,16 +27,25 @@ VENDOR MITRA/
 │ ├── vite.config.js
 
 │ ├── tailwind.config.js
+
 │ ├── postcss.config.js
+
 │ ├── .env
+
 │ ├── dist/ # Production build output
+
 │ ├── node_modules/ # Dependencies
+
 │ ├── BARGAIN_FIX.md # Patch notes and debugging logs
+
 │ ├── CLEAR.html # Helper/test HTML utilities
+
 │ └── ... (React app source files)
 │
 ├── package-lock.json
+
 └── HOW_TO_USE_BARGAINING.md
+
 
 
 ---
@@ -111,4 +120,5 @@ Multi-language support.
 💡 Inspiration
 
 Vendor Mitra was built to empower local vendors by providing a digital platform that combines negotiation, transparency, and accessibility — making digital commerce more personal and fair.
+
 
