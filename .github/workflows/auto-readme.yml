@@ -1,0 +1,47 @@
+name: Auto-generate README
+
+# Run whenever code is pushed to the main branch (change 'main' if your default branch is 'master' or another name)
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write    # allow workflow to commit back to the repo
+
+jobs:
+  generate-readme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install readme-ai (or other generator)
+        run: |
+          python -m pip install --upgrade pip
+          pip install readmeai
+
+      - name: Generate README.md
+        # adjust the command to the generator you prefer; this uses readmeai as example
+        run: |
+          readmeai --repository . --output README.md || echo "readmeai failed or produced no README"
+
+      - name: Show README preview
+        run: |
+          echo "---- README preview ----"
+          head -n 80 README.md || true
+
+      - name: Commit and push README
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          # commit only if there are changes; exit 0 if no changes
+          git diff --staged --quiet || (git commit -m "Auto-generate README" && git push)
