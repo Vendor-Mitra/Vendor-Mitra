@@ -19,9 +19,13 @@
 
 VENDOR MITRA/
 │
+
 ├── Mitra/
+
 │ ├── index.html
+
 │ ├── vite.config.js
+
 │ ├── tailwind.config.js
 │ ├── postcss.config.js
 │ ├── .env
@@ -107,3 +111,4 @@ Multi-language support.
 💡 Inspiration
 
 Vendor Mitra was built to empower local vendors by providing a digital platform that combines negotiation, transparency, and accessibility — making digital commerce more personal and fair.
+
