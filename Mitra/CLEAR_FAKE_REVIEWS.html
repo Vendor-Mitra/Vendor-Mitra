@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Fake Reviews - Vendor Mitra</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .clear-btn {
+      background: #ef4444;
+      color: white;
+    }
+    .clear-btn:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+    .check-btn {
+      background: #10b981;
+      color: white;
+    }
+    .check-btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    }
+    .info-btn {
+      background: #3b82f6;
+      color: white;
+    }
+    .info-btn:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+    }
+    #output {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      min-height: 100px;
+      white-space: pre-wrap;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+    }
+    .warning {
+      background: rgba(239, 68, 68, 0.2);
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .success {
+      background: rgba(16, 185, 129, 0.2);
+      border-left: 4px solid #10b981;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧹 Clear Fake Reviews</h1>
+    
+    <div class="warning">
+      <strong>⚠️ Warning:</strong> This will remove ALL reviews from the system. Only reviews written by real users after this will be kept.
+    </div>
+
+    <button class="check-btn" onclick="checkReviews()">📊 Check Current Reviews</button>
+    <button class="clear-btn" onclick="clearAllReviews()">🗑️ Clear All Reviews</button>
+    <button class="info-btn" onclick="showStorageInfo()">💾 Show Storage Info</button>
+
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const output = document.getElementById('output');
+
+    function log(message, type = 'info') {
+      const timestamp = new Date().toLocaleTimeString();
+      const prefix = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+      output.innerHTML += `[${timestamp}] ${prefix} ${message}\n`;
+      output.scrollTop = output.scrollHeight;
+    }
+
+    function checkReviews() {
+      output.innerHTML = '';
+      log('Checking reviews in localStorage...', 'info');
+      
+      try {
+        const reviews = localStorage.getItem('vendorMitraReviews');
+        
+        if (!reviews) {
+          log('No reviews found in localStorage', 'success');
+          return;
+        }
+
+        const parsedReviews = JSON.parse(reviews);
+        log(`Found ${parsedReviews.length} review(s) in storage`, 'info');
+        
+        if (parsedReviews.length > 0) {
+          log('\n📋 Review Details:', 'info');
+          parsedReviews.forEach((review, index) => {
+            log(`\n--- Review ${index + 1} ---`, 'info');
+            log(`Product: ${review.productName || review.productId || 'Unknown'}`, 'info');
+            log(`Rating: ${review.rating || 'N/A'} stars`, 'info');
+            log(`Comment: ${review.comment || review.text || 'No comment'}`, 'info');
+            log(`Vendor: ${review.vendorName || review.vendorId || 'Unknown'}`, 'info');
+            log(`Date: ${review.date || 'Unknown'}`, 'info');
+          });
+        }
+      } catch (error) {
+        log(`Error reading reviews: ${error.message}`, 'error');
+      }
+    }
+
+    function clearAllReviews() {
+      output.innerHTML = '';
+      
+      if (!confirm('⚠️ Are you sure you want to clear ALL reviews? This action cannot be undone!')) {
+        log('Operation cancelled by user', 'info');
+        return;
+      }
+
+      try {
+        log('Clearing all reviews...', 'info');
+        
+        // Clear reviews from localStorage
+        localStorage.removeItem('vendorMitraReviews');
+        
+        log('✅ All reviews have been cleared!', 'success');
+        log('The reviews database is now empty.', 'success');
+        log('Only new reviews written by real users will be saved.', 'success');
+        
+        // Verify
+        const check = localStorage.getItem('vendorMitraReviews');
+        if (!check) {
+          log('\n✅ Verification: Reviews storage is empty', 'success');
+        } else {
+          log('\n⚠️ Warning: Some data may still exist', 'error');
+        }
+      } catch (error) {
+        log(`❌ Error clearing reviews: ${error.message}`, 'error');
+      }
+    }
+
+    function showStorageInfo() {
+      output.innerHTML = '';
+      log('📊 LocalStorage Information:', 'info');
+      log('', 'info');
+      
+      const keys = [
+        'vendorMitraReviews',
+        'vendorMitraProducts',
+        'vendorMitraFlashSales',
+        'vendorMitraBargains',
+        'vendorMitraDeliveries',
+        'vendorMitraUsers'
+      ];
+
+      keys.forEach(key => {
+        const data = localStorage.getItem(key);
+        if (data) {
+          try {
+            const parsed = JSON.parse(data);
+            const count = Array.isArray(parsed) ? parsed.length : 'N/A';
+            log(`${key}: ${count} items`, 'info');
+          } catch {
+            log(`${key}: ${data.length} bytes (not JSON array)`, 'info');
+          }
+        } else {
+          log(`${key}: Empty`, 'info');
+        }
+      });
+    }
+
+    // Auto-check on load
+    window.onload = () => {
+      log('🚀 Review Management Tool Loaded', 'success');
+      log('Click "Check Current Reviews" to see what\'s stored', 'info');
+    };
+  </script>
+</body>
+</html>

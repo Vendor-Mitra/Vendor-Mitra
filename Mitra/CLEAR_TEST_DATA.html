@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Test Data - Mitra</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #4CAF50;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        button.danger {
+            background: #f44336;
+        }
+        button.danger:hover {
+            background: #da190b;
+        }
+        .info {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        pre {
+            background: #263238;
+            color: #aed581;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        .result.success {
+            background: #c8e6c9;
+            color: #2e7d32;
+            display: block;
+        }
+        .result.error {
+            background: #ffcdd2;
+            color: #c62828;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Clear Test Data - Mitra</h1>
+        
+        <div class="warning">
+            <strong>⚠️ Warning:</strong> This will permanently delete test data from your browser's localStorage. Make sure you're okay with losing this data before proceeding.
+        </div>
+
+        <div class="section">
+            <h2>📦 View Current Data</h2>
+            <button onclick="viewDeliveries()">View All Deliveries</button>
+            <button onclick="viewBargains()">View All Bargains</button>
+            <button onclick="viewBargainedPrices()">View Bargained Prices</button>
+            <div id="viewResult" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>🗑️ Clear Specific Data</h2>
+            <button onclick="clearDeliveries()">Clear Deliveries Only</button>
+            <button onclick="clearBargains()">Clear Bargains Only</button>
+            <button onclick="clearBargainedPrices()">Clear Bargained Prices Only</button>
+            <div id="clearResult" class="result"></div>
+        </div>
+
+        <div class="section">
+            <h2>💣 Clear All Test Data</h2>
+            <button class="danger" onclick="clearAllTestData()">Clear All (Deliveries + Bargains + Prices)</button>
+            <div id="clearAllResult" class="result"></div>
+        </div>
+
+        <div class="info">
+            <strong>💡 Tip:</strong> After clearing data, refresh your Mitra app to see the changes.
+        </div>
+
+        <div class="section">
+            <h2>📋 Manual Console Commands</h2>
+            <p>You can also open your Mitra app, press F12, and run these commands in the Console:</p>
+            
+            <h3>Clear Deliveries:</h3>
+            <pre>localStorage.removeItem('vendorMitraDeliveries')
+console.log('✅ Deliveries cleared!')
+location.reload()</pre>
+
+            <h3>Clear Bargains:</h3>
+            <pre>localStorage.removeItem('vendorMitraBargains')
+console.log('✅ Bargains cleared!')
+location.reload()</pre>
+
+            <h3>Clear Everything:</h3>
+            <pre>localStorage.removeItem('vendorMitraDeliveries')
+localStorage.removeItem('vendorMitraBargains')
+localStorage.removeItem('vendorMitraBargainedPrices')
+console.log('✅ All test data cleared!')
+location.reload()</pre>
+        </div>
+    </div>
+
+    <script>
+        function viewDeliveries() {
+            const deliveries = JSON.parse(localStorage.getItem('vendorMitraDeliveries') || '[]')
+            const result = document.getElementById('viewResult')
+            result.className = 'result success'
+            result.innerHTML = `
+                <strong>📦 Total Deliveries: ${deliveries.length}</strong><br><br>
+                ${deliveries.map(d => `
+                    <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
+                        <strong>Order ${d.orderId}</strong> - ₹${d.totalAmount}<br>
+                        Customer: ${d.customer}<br>
+                        Supplier: ${d.supplier}<br>
+                        Products: ${d.products?.length || 0} items<br>
+                        Status: ${d.status}
+                    </div>
+                `).join('')}
+            `
+        }
+
+        function viewBargains() {
+            const bargains = JSON.parse(localStorage.getItem('vendorMitraBargains') || '[]')
+            const result = document.getElementById('viewResult')
+            result.className = 'result success'
+            result.innerHTML = `
+                <strong>💬 Total Bargains: ${bargains.length}</strong><br><br>
+                ${bargains.map(b => `
+                    <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
+                        <strong>${b.productName}</strong><br>
+                        Vendor: ${b.vendorName} ↔️ Supplier: ${b.supplierName}<br>
+                        Status: ${b.status}<br>
+                        Messages: ${b.messages?.length || 0}<br>
+                        Final Price: ${b.finalPrice ? '₹' + b.finalPrice : 'Not set'}
+                    </div>
+                `).join('')}
+            `
+        }
+
+        function viewBargainedPrices() {
+            const prices = JSON.parse(localStorage.getItem('vendorMitraBargainedPrices') || '{}')
+            const result = document.getElementById('viewResult')
+            result.className = 'result success'
+            const entries = Object.entries(prices)
+            result.innerHTML = `
+                <strong>💰 Bargained Prices: ${entries.length}</strong><br><br>
+                ${entries.map(([productId, data]) => `
+                    <div style="margin: 10px 0; padding: 10px; background: white; border-radius: 5px;">
+                        Product ID: ${productId}<br>
+                        Original: ₹${data.originalPrice} → Bargained: ₹${data.bargainedPrice}
+                    </div>
+                `).join('')}
+            `
+        }
+
+        function clearDeliveries() {
+            const count = JSON.parse(localStorage.getItem('vendorMitraDeliveries') || '[]').length
+            localStorage.removeItem('vendorMitraDeliveries')
+            const result = document.getElementById('clearResult')
+            result.className = 'result success'
+            result.innerHTML = `✅ Cleared ${count} deliveries! Refresh your app to see changes.`
+        }
+
+        function clearBargains() {
+            const count = JSON.parse(localStorage.getItem('vendorMitraBargains') || '[]').length
+            localStorage.removeItem('vendorMitraBargains')
+            const result = document.getElementById('clearResult')
+            result.className = 'result success'
+            result.innerHTML = `✅ Cleared ${count} bargains! Refresh your app to see changes.`
+        }
+
+        function clearBargainedPrices() {
+            const count = Object.keys(JSON.parse(localStorage.getItem('vendorMitraBargainedPrices') || '{}')).length
+            localStorage.removeItem('vendorMitraBargainedPrices')
+            const result = document.getElementById('clearResult')
+            result.className = 'result success'
+            result.innerHTML = `✅ Cleared ${count} bargained prices! Refresh your app to see changes.`
+        }
+
+        function clearAllTestData() {
+            const deliveries = JSON.parse(localStorage.getItem('vendorMitraDeliveries') || '[]').length
+            const bargains = JSON.parse(localStorage.getItem('vendorMitraBargains') || '[]').length
+            const prices = Object.keys(JSON.parse(localStorage.getItem('vendorMitraBargainedPrices') || '{}')).length
+            
+            localStorage.removeItem('vendorMitraDeliveries')
+            localStorage.removeItem('vendorMitraBargains')
+            localStorage.removeItem('vendorMitraBargainedPrices')
+            
+            const result = document.getElementById('clearAllResult')
+            result.className = 'result success'
+            result.innerHTML = `
+                ✅ <strong>All test data cleared!</strong><br><br>
+                • Deliveries: ${deliveries} cleared<br>
+                • Bargains: ${bargains} cleared<br>
+                • Bargained Prices: ${prices} cleared<br><br>
+                <strong>Please refresh your Mitra app now!</strong>
+            `
+        }
+    </script>
+</body>
+</html>

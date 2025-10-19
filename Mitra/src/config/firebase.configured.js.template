@@ -1,0 +1,52 @@
+// Firebase configuration - CONFIGURED VERSION
+// This is a template file. After installing Firebase:
+// 1. Rename this file to: firebase.js (replace the existing one)
+// 2. Update the firebaseConfig values below with your actual Firebase credentials
+
+import { initializeApp } from 'firebase/app'
+import { getFirestore } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth'
+
+// TODO: Replace with your Firebase project configuration
+// Get these values from Firebase Console → Project Settings → Your Apps → Web App
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY_HERE",
+  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT_ID.appspot.com",
+  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+  appId: "YOUR_APP_ID"
+}
+
+// Check if Firebase is configured
+const isConfigured = firebaseConfig.apiKey !== "YOUR_API_KEY_HERE"
+
+let app = null
+let db = null
+let auth = null
+
+if (!isConfigured) {
+  console.warn('⚠️ Firebase not configured. Using localStorage fallback.')
+  console.warn('📖 Update firebaseConfig in src/config/firebase.js')
+  console.warn('📖 See FIREBASE_SETUP_INSTRUCTIONS.md for setup guide')
+} else {
+  try {
+    // Initialize Firebase
+    app = initializeApp(firebaseConfig)
+    
+    // Initialize Firestore
+    db = getFirestore(app)
+    
+    // Initialize Auth
+    auth = getAuth(app)
+    
+    console.log('✅ Firebase initialized successfully')
+    console.log('🔥 Cross-device sync enabled!')
+  } catch (error) {
+    console.error('❌ Firebase initialization error:', error)
+    console.warn('⚠️ Falling back to localStorage')
+  }
+}
+
+export { app, db, auth, isConfigured }
+export default app
