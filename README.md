@@ -73,6 +73,7 @@ npm run build
 
 # 5️⃣ Preview the production build
 npm run preview
+```
 
 ## Key Functional Modules
 
