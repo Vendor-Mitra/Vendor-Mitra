@@ -1,6 +1,6 @@
 #  Vendor Mitra
 
-*Vendor Mitra* is a smart vendor–customer interaction platform designed to simplify online shopping and negotiation. It bridges the gap between vendors and buyers through a seamless *bargaining system, **dynamic cart management, and **real-time communication* — empowering small businesses and customers alike.
+*Vendor Mitra* is a smart vendor–customer interaction platform designed to simplify online shopping and negotiation. It bridges the gap between vendors and buyers through a seamless *bargaining system, **dynamic cart management, and **real-time communication* — empowering small businesses and customers alike. 
 
 ---
 
